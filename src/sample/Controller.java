@@ -12,9 +12,11 @@ import jodd.json.JsonParser;
 import jodd.json.JsonSerializer;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -33,28 +35,29 @@ public class Controller implements Initializable {
 		todoList.setItems(todoItems);
 		Scanner inputScanner = new Scanner(System.in);
 		System.out.println("Please enter your name");
-		String nameSet = inputScanner.nextLine();
-		ListContainer myContainer = new ListContainer(nameSet, todoItems);
-		myContainer.containerDump();
-		System.out.println("Thank you, " + myContainer.getName());
+		String setName = inputScanner.nextLine();
+//		ListContainer myContainer = new ListContainer(setName, todoItems);
+//		System.out.println("Thank you, " + myContainer.getName());
 
 
-//		try {
-//			File listFile = new File("list.json");
-//			Scanner listScanner = new Scanner(listFile);
-//			while(listScanner.hasNext()) {
-//				jsonRestore();
-//				System.out.println("In the while loop");
+		try {
+			File listFile = new File("list.json");
+			Scanner listScanner = new Scanner(listFile);
+
+			String scanList = null;
+			scanList = listScanner.nextLine();
+
+			ListContainer myContainer = jsonRestore(scanList);
+
+
+//				System.out.println(something);
 //				String[] listArray = listScanner.nextLine().split("=");
-//				System.out.println(listArray[0]);
-//				System.out.println(listArray[1]);
 //				todoItems.add(new ToDoItem((listArray[0]), Boolean.valueOf(listArray[1])));
-//			}
-//			myContainer.containerDump();
-//		}
-//		catch (FileNotFoundException exception) {
-//
-//		}
+
+		}
+		catch (FileNotFoundException exception) {
+
+		}
 	}
 
 	public void addOnEnter(KeyEvent e) {
@@ -89,7 +92,6 @@ public class Controller implements Initializable {
 			todoItem.isDone = !todoItem.isDone;
 			todoList.setItems(null);
 			todoList.setItems(todoItems);
-//			jsonGenerateString(todoItem);
 			saveList();
 		}
 	}
@@ -101,7 +103,6 @@ public class Controller implements Initializable {
 				item.isDone = true;
 				todoList.setItems(null);
 				todoList.setItems(todoItems);
-//				jsonGenerateString(item);
 				saveList();
 			}
 		}
@@ -114,7 +115,6 @@ public class Controller implements Initializable {
 				item.isDone = false;
 				todoList.setItems(null);
 				todoList.setItems(todoItems);
-//				jsonGenerateString(item);
 				saveList();
 			}
 		}
@@ -128,24 +128,27 @@ public class Controller implements Initializable {
 				item.isDone = !item.isDone;
 				todoList.setItems(null);
 				todoList.setItems(todoItems);
-//				jsonGenerateString(item);
 				saveList();
 			}
 		}
 	}
 
 	public void saveList() {
+		FileWriter listWriter = null;
 		try {
+			ListContainer myContainer = new ListContainer();
 			File listFile = new File("list.json");
-			FileWriter listWriter = new FileWriter(listFile);
+			listWriter = new FileWriter(listFile);
 			for (ToDoItem item : todoItems) {
-				listWriter.write(jsonGenerateString(item));
-//				if (item.isDone) {
-//					listWriter.write("=true\n");
-//				} else {
-//					listWriter.write("=false\n");
-//				}
+				myContainer.todoArrayList.add(item);
 			}
+			for (int counter = 0; counter < todoItems.size(); counter++) {
+				System.out.println(myContainer.todoArrayList.get(counter));
+			}
+//			System.out.println(myContainer.todoArrayList.get(1));
+//			listWriter.write(jsonGenerateString(myContainer.todoArrayList));
+			listWriter.write(jsonGenerateString(myContainer));
+
 			listWriter.close();
 		}
 		catch(IOException ioEx){
@@ -153,16 +156,17 @@ public class Controller implements Initializable {
 		}
 	}
 
+
 //	public void containerDump(ListContainer container) {
 //		for (ToDoItem item : todoItems) {
 //			container.userTodoList.add(item);
-////			System.out.println(item);
+//			System.out.println(item);
 //		}
 //	}
 
-	public String jsonGenerateString(ToDoItem todoToSave) {
+	public String jsonGenerateString(ListContainer container) {
 		JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
-		String jsonString = jsonSerializer.serialize(todoToSave);
+		String jsonString = jsonSerializer.serialize(container);
 
 		return jsonString;
 	}
@@ -173,5 +177,7 @@ public class Controller implements Initializable {
 
 		return item;
 	}
+
+
 
 }
