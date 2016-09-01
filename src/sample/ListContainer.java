@@ -30,15 +30,14 @@ public class ListContainer implements Initializable {
 
 	ObservableList<ToDoItem> userTodoList = FXCollections.observableArrayList();
 
+	ArrayList<ToDoItem> todoArrayList = new ArrayList<>();
+
 	public void containerDump() {
 		for (ToDoItem item : userTodoList) {
 			todoArrayList.add(item);
 //			System.out.println(item);
 		}
 	}
-
-
-	ArrayList<ToDoItem> todoArrayList = new ArrayList<>();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

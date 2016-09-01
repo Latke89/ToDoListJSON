@@ -2,7 +2,6 @@ package sample;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
@@ -13,7 +12,6 @@ import jodd.json.JsonParser;
 import jodd.json.JsonSerializer;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -41,21 +39,22 @@ public class Controller implements Initializable {
 		System.out.println("Thank you, " + myContainer.getName());
 
 
-		try {
-			File listFile = new File("list.txt");
-			Scanner listScanner = new Scanner(listFile);
-			while(listScanner.hasNext()) {
+//		try {
+//			File listFile = new File("list.json");
+//			Scanner listScanner = new Scanner(listFile);
+//			while(listScanner.hasNext()) {
+//				jsonRestore();
 //				System.out.println("In the while loop");
-				String[] listArray = listScanner.nextLine().split("=");
+//				String[] listArray = listScanner.nextLine().split("=");
 //				System.out.println(listArray[0]);
 //				System.out.println(listArray[1]);
-				todoItems.add(new ToDoItem((listArray[0]), Boolean.valueOf(listArray[1])));
-			}
-			containerDump(myContainer);
-		}
-		catch (FileNotFoundException exception) {
-
-		}
+//				todoItems.add(new ToDoItem((listArray[0]), Boolean.valueOf(listArray[1])));
+//			}
+//			myContainer.containerDump();
+//		}
+//		catch (FileNotFoundException exception) {
+//
+//		}
 	}
 
 	public void addOnEnter(KeyEvent e) {
@@ -90,6 +89,7 @@ public class Controller implements Initializable {
 			todoItem.isDone = !todoItem.isDone;
 			todoList.setItems(null);
 			todoList.setItems(todoItems);
+//			jsonGenerateString(todoItem);
 			saveList();
 		}
 	}
@@ -101,6 +101,7 @@ public class Controller implements Initializable {
 				item.isDone = true;
 				todoList.setItems(null);
 				todoList.setItems(todoItems);
+//				jsonGenerateString(item);
 				saveList();
 			}
 		}
@@ -113,6 +114,7 @@ public class Controller implements Initializable {
 				item.isDone = false;
 				todoList.setItems(null);
 				todoList.setItems(todoItems);
+//				jsonGenerateString(item);
 				saveList();
 			}
 		}
@@ -126,6 +128,7 @@ public class Controller implements Initializable {
 				item.isDone = !item.isDone;
 				todoList.setItems(null);
 				todoList.setItems(todoItems);
+//				jsonGenerateString(item);
 				saveList();
 			}
 		}
@@ -133,15 +136,15 @@ public class Controller implements Initializable {
 
 	public void saveList() {
 		try {
-			File listFile = new File("list.txt");
+			File listFile = new File("list.json");
 			FileWriter listWriter = new FileWriter(listFile);
 			for (ToDoItem item : todoItems) {
-				listWriter.write(item.text);
-				if (item.isDone) {
-					listWriter.write("=true\n");
-				} else {
-					listWriter.write("=false\n");
-				}
+				listWriter.write(jsonGenerateString(item));
+//				if (item.isDone) {
+//					listWriter.write("=true\n");
+//				} else {
+//					listWriter.write("=false\n");
+//				}
 			}
 			listWriter.close();
 		}
@@ -150,14 +153,14 @@ public class Controller implements Initializable {
 		}
 	}
 
-	public void containerDump(ListContainer container) {
-		for (ToDoItem item : todoItems) {
-			container.userTodoList.add(item);
-//			System.out.println(item);
-		}
-	}
+//	public void containerDump(ListContainer container) {
+//		for (ToDoItem item : todoItems) {
+//			container.userTodoList.add(item);
+////			System.out.println(item);
+//		}
+//	}
 
-	public String jsonSave(ToDoItem todoToSave) {
+	public String jsonGenerateString(ToDoItem todoToSave) {
 		JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
 		String jsonString = jsonSerializer.serialize(todoToSave);
 

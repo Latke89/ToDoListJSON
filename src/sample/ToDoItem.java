@@ -7,8 +7,8 @@ import java.io.File;
  */
 public class ToDoItem {
 
-		String text;
-		boolean isDone;
+		public String text;
+		public boolean isDone;
 
 	public ToDoItem(String text, boolean isDone) {
 		this.text = text;
