@@ -19,8 +19,6 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-//        Controller myController = new Controller();
-//        myController.readList();
         launch(args);
     }
 }

@@ -38,9 +38,9 @@ public class Controller implements Initializable {
 		Scanner inputScanner = new Scanner(System.in);
 		System.out.println("Please enter your name");
 		String setName = inputScanner.nextLine();
+		setName.substring(0,1).toUpperCase();
+		setName.substring(1).toLowerCase();
 		setUserName(setName);
-//		ListContainer myContainer = new ListContainer(setName, todoItems);
-//		System.out.println("Thank you, " + myContainer.getName());
 		readFromFile();
 
 
@@ -131,7 +131,7 @@ public class Controller implements Initializable {
 		FileWriter listWriter = null;
 		try {
 			ListContainer myContainer = new ListContainer();
-			File listFile = new File("list.json");
+			File listFile = new File(userName + ".json");
 			listWriter = new FileWriter(listFile);
 			for (ToDoItem item : todoItems) {
 				myContainer.todoArrayList.add(item);
@@ -139,8 +139,6 @@ public class Controller implements Initializable {
 			for (int counter = 0; counter < todoItems.size(); counter++) {
 				System.out.println(myContainer.todoArrayList.get(counter));
 			}
-//			System.out.println(myContainer.todoArrayList.get(1));
-//			listWriter.write(jsonGenerateString(myContainer.todoArrayList));
 			listWriter.write(jsonGenerateString(myContainer));
 
 			listWriter.close();
@@ -152,23 +150,20 @@ public class Controller implements Initializable {
 
 	public void readFromFile() {
 		try {
-			File listFile = new File("list.json");
-			Scanner listScanner = new Scanner(listFile);
+			File listFile = new File(userName + ".json");
+			if (listFile.exists()) {
+				Scanner listScanner = new Scanner(listFile);
 
-			String scanList = null;
-			scanList = listScanner.nextLine();
+				String scanList = null;
+				scanList = listScanner.nextLine();
 
-			ListContainer myContainer = jsonRestore(scanList);
-			for(ToDoItem item : myContainer.todoArrayList) {
-				boolean isDone = item.isDone;
-				String text = item.text;
-				todoItems.add(new ToDoItem(text, isDone));
+				ListContainer myContainer = jsonRestore(scanList);
+				for (ToDoItem item : myContainer.todoArrayList) {
+					boolean isDone = item.isDone;
+					String text = item.text;
+					todoItems.add(new ToDoItem(text, isDone));
+				}
 			}
-
-
-//				System.out.println(something);
-//				String[] listArray = listScanner.nextLine().split("=");
-//				todoItems.add(new ToDoItem((listArray[0]), Boolean.valueOf(listArray[1])));
 
 		}
 		catch (FileNotFoundException exception) {
@@ -176,13 +171,6 @@ public class Controller implements Initializable {
 		}
 	}
 
-
-//	public void containerDump(ListContainer container) {
-//		for (ToDoItem item : todoItems) {
-//			container.userTodoList.add(item);
-//			System.out.println(item);
-//		}
-//	}
 
 	public String jsonGenerateString(ListContainer container) {
 		JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
