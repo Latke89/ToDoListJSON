@@ -22,6 +22,8 @@ import java.util.Scanner;
 
 public class Controller implements Initializable {
 
+	private String userName;
+
 	@FXML
 	ListView todoList;
 
@@ -36,28 +38,20 @@ public class Controller implements Initializable {
 		Scanner inputScanner = new Scanner(System.in);
 		System.out.println("Please enter your name");
 		String setName = inputScanner.nextLine();
+		setUserName(setName);
 //		ListContainer myContainer = new ListContainer(setName, todoItems);
 //		System.out.println("Thank you, " + myContainer.getName());
+		readFromFile();
 
 
-		try {
-			File listFile = new File("list.json");
-			Scanner listScanner = new Scanner(listFile);
+	}
 
-			String scanList = null;
-			scanList = listScanner.nextLine();
+	public String getUserName() {
+		return userName;
+	}
 
-			ListContainer myContainer = jsonRestore(scanList);
-
-
-//				System.out.println(something);
-//				String[] listArray = listScanner.nextLine().split("=");
-//				todoItems.add(new ToDoItem((listArray[0]), Boolean.valueOf(listArray[1])));
-
-		}
-		catch (FileNotFoundException exception) {
-
-		}
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public void addOnEnter(KeyEvent e) {
@@ -156,6 +150,32 @@ public class Controller implements Initializable {
 		}
 	}
 
+	public void readFromFile() {
+		try {
+			File listFile = new File("list.json");
+			Scanner listScanner = new Scanner(listFile);
+
+			String scanList = null;
+			scanList = listScanner.nextLine();
+
+			ListContainer myContainer = jsonRestore(scanList);
+			for(ToDoItem item : myContainer.todoArrayList) {
+				boolean isDone = item.isDone;
+				String text = item.text;
+				todoItems.add(new ToDoItem(text, isDone));
+			}
+
+
+//				System.out.println(something);
+//				String[] listArray = listScanner.nextLine().split("=");
+//				todoItems.add(new ToDoItem((listArray[0]), Boolean.valueOf(listArray[1])));
+
+		}
+		catch (FileNotFoundException exception) {
+
+		}
+	}
+
 
 //	public void containerDump(ListContainer container) {
 //		for (ToDoItem item : todoItems) {
@@ -171,9 +191,9 @@ public class Controller implements Initializable {
 		return jsonString;
 	}
 
-	public ToDoItem jsonRestore(String jsonTD) {
+	public ListContainer jsonRestore(String jsonTD) {
 		JsonParser toDoItemParser = new JsonParser();
-		ToDoItem item = toDoItemParser.parse(jsonTD, ToDoItem.class);
+		ListContainer item = toDoItemParser.parse(jsonTD, ListContainer.class);
 
 		return item;
 	}

@@ -1,13 +1,14 @@
 package sample;
 
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.io.Serializable;
 
 /**
  * Created by Brett on 8/31/16.
  */
-public class ListContainer {
+public class ListContainer implements Serializable{
+
+
 
 	public ListContainer() {
 

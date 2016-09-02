@@ -20,7 +20,10 @@ public class ToDoItem {
 			this.isDone = false;
 		}
 
-		@Override
+	public ToDoItem() {
+	}
+
+	@Override
 		public String toString() {
 			if (isDone) {
 				return text + " (done)";
